@@ -325,52 +325,117 @@ const container = document.getElementById("container");
 const rayonSelect = document.getElementById("rayon");
 const otaqSelect = document.getElementById("otaq");
 const tipSelect = document.getElementById("tip");
+const searchInput = document.getElementById("search");
+const minPriceInput = document.getElementById("minPrice");
+const maxPriceInput = document.getElementById("maxPrice");
+const senedSelect = document.getElementById("sened");
+const temirSelect = document.getElementById("temir");
+const filterBtn = document.getElementById("filterBtn");
+const resetBtn = document.getElementById("resetBtn");
 
-// forEach seher(rayon) filterleme funksiyasi
-
-home.forEach((item) => {
-  const uniqueModels = [...new Set(home.map((item) => item.seher))];
-  rayonSelect.innerHTML = uniqueModels
+function initSelects() {
+  const uniqueSeher = [...new Set(home.map((item) => item.seher))];
+  rayonSelect.innerHTML = `<option value="">Yerləşmə</option>` + uniqueSeher
     .map((seher) => `<option value="${seher}">${seher}</option>`)
     .join("");
-});
-home.forEach((item) => {
-  const uniqueModels = [...new Set(home.map((item) => item.model))];
-  otaqSelect.innerHTML = uniqueModels
+
+  const uniqueModel = [...new Set(home.map((item) => item.model))];
+  otaqSelect.innerHTML = `<option value="">Otaq sayı</option>` + uniqueModel
     .map((model) => `<option value="${model}">${model}</option>`)
     .join("");
-});
-home.forEach((item) => {
-  const uniqueModels = [...new Set(home.map((item) => item.type))];
-  tipSelect.innerHTML = uniqueModels
+
+  const uniqueType = [...new Set(home.map((item) => item.type))];
+  tipSelect.innerHTML = `<option value="">Əmlakın növü</option>` + uniqueType
     .map((type) => `<option value="${type}">${type}</option>`)
     .join("");
-});
+}
 
-home.forEach((item) => {
-  container.innerHTML += `
+function renderCards(data) {
+  if (data.length === 0) {
+    container.innerHTML = `<p class="col-span-full text-center text-gray-500 py-8">Heç bir elan tapılmadı.</p>`;
+    return;
+  }
+
+  container.innerHTML = data
+    .map(
+      (item) => `
     <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition overflow-hidden cursor-pointer border border-gray-100">
-
-  <!-- Şəkil -->
-  <div class="relative">
-    <img src="${item.sekil}" alt="Ev" class="w-full h-48 object-cover">
-    <span class="absolute top-3 left-3 bg-black/60 text-white text-xs px-2.5 py-1 rounded-md">${item.seher}</span>
-  </div>
-
-  <!-- Məlumat -->
-  <div class="p-4">
-    <p class="text-emerald-600 font-bold text-xl" onclick="window.location.href = 'detail.html?id=${item.id}'">${item.qiymet.toLocaleString()} ₼</p>
-    <h3 class="font-semibold text-gray-800 mt-1.5">${item.type} • ${item.model}</h3>
-    <p class="text-gray-500 text-sm mt-1">${item.muherrik} m² • ${item.yurus}-ci mərtəbə • ${item.il}</p>
-
-    <!-- Etiketlər -->
-    <div class="flex gap-2 mt-3 flex-wrap">
-      <span class="text-xs bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-md">${item.ban}</span>
-      <span class="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-md">${item.yanacaq}</span>
-      <span class="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-md">${item.suret}</span>
+      <div class="relative">
+        <img src="${item.sekil}" alt="Ev" class="w-full h-48 object-cover">
+        <span class="absolute top-3 left-3 bg-black/60 text-white text-xs px-2.5 py-1 rounded-md">${item.seher}</span>
+      </div>
+      <div class="p-4">
+        <p class="text-emerald-600 font-bold text-xl" onclick="window.location.href = 'detail.html?id=${item.id}'">${item.qiymet.toLocaleString()} ₼</p>
+        <h3 class="font-semibold text-gray-800 mt-1.5">${item.type} • ${item.model}</h3>
+        <p class="text-gray-500 text-sm mt-1">${item.muherrik} m² • ${item.yurus}-ci mərtəbə • ${item.il}</p>
+        <div class="flex gap-2 mt-3 flex-wrap">
+          <span class="text-xs bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-md">${item.ban}</span>
+          <span class="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-md">${item.yanacaq}</span>
+          <span class="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-md">${item.suret}</span>
+        </div>
+      </div>
     </div>
-  </div>
+  `
+    )
+    .join("");
+}
 
-</div>
-   `;
-});
+function applyFilters() {
+  const query = searchInput.value.toLowerCase().trim();
+  const selectedTip = tipSelect.value;
+  const selectedOtaq = otaqSelect.value;
+  const selectedRayon = rayonSelect.value;
+  const selectedSened = senedSelect.value;
+  const selectedTemir = temirSelect.value;
+  const minPrice = parseFloat(minPriceInput.value) || 0;
+  const maxPrice = parseFloat(maxPriceInput.value) || Infinity;
+
+  const filtered = home.filter((item) => {
+    const matchesQuery =
+      item.type.toLowerCase().includes(query) ||
+      item.model.toLowerCase().includes(query) ||
+      item.seher.toLowerCase().includes(query) ||
+      item.reng.toLowerCase().includes(query) ||
+      item.ban.toLowerCase().includes(query);
+
+    const matchesTip = !selectedTip || item.type === selectedTip;
+    const matchesOtaq = !selectedOtaq || item.model === selectedOtaq;
+    const matchesRayon = !selectedRayon || item.seher === selectedRayon;
+    const matchesSened = !selectedSened || item.yanacaq === selectedSened;
+    const matchesTemir = !selectedTemir || item.ban === selectedTemir;
+    const matchesMinPrice = item.qiymet >= minPrice;
+    const matchesMaxPrice = item.qiymet <= maxPrice;
+
+    return (
+      matchesQuery &&
+      matchesTip &&
+      matchesOtaq &&
+      matchesRayon &&
+      matchesSened &&
+      matchesTemir &&
+      matchesMinPrice &&
+      matchesMaxPrice
+    );
+  });
+
+  renderCards(filtered);
+}
+
+function resetFilters() {
+  searchInput.value = "";
+  tipSelect.value = "";
+  otaqSelect.value = "";
+  rayonSelect.value = "";
+  senedSelect.value = "";
+  temirSelect.value = "";
+  minPriceInput.value = "";
+  maxPriceInput.value = "";
+  renderCards(home);
+}
+
+initSelects();
+renderCards(home);
+
+searchInput.addEventListener("input", applyFilters);
+filterBtn.addEventListener("click", applyFilters);
+resetBtn.addEventListener("click", resetFilters);

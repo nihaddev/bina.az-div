@@ -10,7 +10,6 @@
 
 <body class="bg-gray-100 min-h-screen">
 
-  <!-- Üst zolaq -->
   <div class="bg-gray-50 border-b border-gray-200 text-sm text-gray-600">
     <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between">
       <div class="flex gap-5 font-medium">
@@ -29,7 +28,6 @@
     </div>
   </div>
 
-  <!-- Header -->
   <header class="bg-emerald-600 text-white">
     <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
       <div class="flex items-center gap-8">
@@ -49,7 +47,6 @@
     </div>
   </header>
 
-  <!-- Filter paneli -->
   <section class="bg-white border-b border-gray-200 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 py-6">
 
@@ -59,7 +56,6 @@
         </select>
         <select id="otaq" class="flex-1 min-w-[180px] bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-600">
           <option value="">Otaq sayı</option>
-          
         </select>
         <select id="rayon" class="flex-1 min-w-[180px] bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-600">
           <option value="">Yerləşmə</option>
@@ -67,24 +63,24 @@
       </div>
 
       <div class="flex flex-wrap gap-3 mb-4">
-        <input type="text" placeholder="Qiymət, min."
+        <input type="number" id="minPrice" placeholder="Qiymət, min."
           class="w-32 bg-white border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-400">
-        <input type="text" placeholder="maks."
+        <input type="number" id="maxPrice" placeholder="maks."
           class="w-28 bg-white border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-400">
         <select class="bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-700">
           <option>AZN</option>
           <option>USD</option>
         </select>
-        <select class="flex-1 min-w-[160px] bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-600">
-          <option>Sənəd növü</option>
-          <option>Kupça</option>
-          <option>Müqavilə</option>
+        <select id="sened" class="flex-1 min-w-[160px] bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-600">
+          <option value="">Sənəd növü</option>
+          <option value="Kupça">Kupça</option>
+          <option value="Müqavilə">Müqavilə</option>
         </select>
-        <select class="flex-1 min-w-[160px] bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-600">
-          <option>Təmir</option>
-          <option>Təmirli</option>
-          <option>Təmirsiz</option>
-          <option>Orta təmir</option>
+        <select id="temir" class="flex-1 min-w-[160px] bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-600">
+          <option value="">Təmir</option>
+          <option value="Təmirli">Təmirli</option>
+          <option value="Təmirsiz">Təmirsiz</option>
+          <option value="Orta təmir">Orta təmir</option>
         </select>
       </div>
 
@@ -93,8 +89,8 @@
           <input type="text" id="search" placeholder="Axtarış edin..."
             class="w-full pl-4 py-2.5 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400">
         </div>
-        <button class="text-gray-500 hover:text-gray-700">Sıfırla</button>
-        <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-2.5 rounded-lg font-semibold">
+        <button id="resetBtn" class="text-gray-500 hover:text-gray-700">Sıfırla</button>
+        <button id="filterBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-2.5 rounded-lg font-semibold">
           Elanları göstər
         </button>
       </div>
@@ -102,13 +98,11 @@
     </div>
   </section>
 
-  <!-- Elanlar -->
   <section class="max-w-7xl mx-auto px-4 mt-6">
     <h2 class="text-xl font-bold text-gray-800 mb-4">SEÇİLMİŞ ELANLAR</h2>
     <div id="container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pb-10"></div>
   </section>
 
-  <script src="cars.js"></script>
   <script src="index.js"></script>
 </body>
 </html>
