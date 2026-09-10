@@ -322,6 +322,30 @@ const home = [
 ];
 
 const container = document.getElementById("container");
+const rayonSelect = document.getElementById("rayon");
+const otaqSelect = document.getElementById("otaq");
+const tipSelect = document.getElementById("tip");
+
+// forEach seher(rayon) filterleme funksiyasi
+
+home.forEach((item) => {
+  const uniqueModels = [...new Set(home.map((item) => item.seher))];
+  rayonSelect.innerHTML = uniqueModels
+    .map((seher) => `<option value="${seher}">${seher}</option>`)
+    .join("");
+});
+home.forEach((item) => {
+  const uniqueModels = [...new Set(home.map((item) => item.model))];
+  otaqSelect.innerHTML = uniqueModels
+    .map((model) => `<option value="${model}">${model}</option>`)
+    .join("");
+});
+home.forEach((item) => {
+  const uniqueModels = [...new Set(home.map((item) => item.type))];
+  tipSelect.innerHTML = uniqueModels
+    .map((type) => `<option value="${type}">${type}</option>`)
+    .join("");
+});
 
 home.forEach((item) => {
   container.innerHTML += `
